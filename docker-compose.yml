@@ -1,0 +1,41 @@
+
+services:
+  testapp:
+    build:
+      context: .
+    image: nodeapp
+    ports:
+      - "5050:5050"
+    restart: always
+    depends_on:
+      - mongo
+    
+  mongo:
+    image: mongo
+    container_name: "mongodb"
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secure123
+      MONGO_INITDB_DATABASE: apnacollege-db
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-exp
+    ports:
+      - 8081:8081
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secure123
+      ME_CONFIG_MONGODB_URL: mongodb://root:secure123@mongodb:27017/
+    depends_on:
+      - mongo
+volumes:
+  mongo-data:
+
+
